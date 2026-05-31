@@ -160,7 +160,7 @@ client.on('messageCreate', (message) => {
  // ======================
 // 🚨 AUTOMOD END
 // ======================
-
+});
 
 // ----------------------
 // LEVEL SYSTEM
