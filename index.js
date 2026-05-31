@@ -7,7 +7,7 @@ const {
     SlashCommandBuilder
 } = require('discord.js');
 
-const TOKEN = 'MTUxMDYyNTI0Njc5OTk5MTAxNA.GHG0Gk.d4m1-C23DsxqoVOP5noSC4Yv4yXtJ4CyjH32YI';
+const TOKEN = process.env.TOKEN;
 const CLIENT_ID = '1510625246799991014';
 
 const LOG_CHANNEL_ID = '1510658657719943400';
