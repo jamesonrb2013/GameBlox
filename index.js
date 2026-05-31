@@ -8,9 +8,8 @@ const {
 } = require('discord.js');
 
 const TOKEN = process.env.TOKEN;
-const CLIENT_ID = '1510625246799991014';
-
-const LOG_CHANNEL_ID = '1510658657719943400';
+const CLIENT_ID = process.env.CLIENT_ID;
+const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 
 const fs = require('fs');
 const path = require('path');
