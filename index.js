@@ -176,7 +176,6 @@ const last = cooldowns.get(message.author.id);
 
     if (Date.now() < user.xpBoostUntil) xpGain *= 2;
 
-    ...
 // =====================================================
 // 🆕 MODERATION ADDITIONS (APPENDED ONLY - NOTHING REMOVED)
 // =====================================================
