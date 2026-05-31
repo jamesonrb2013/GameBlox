@@ -157,9 +157,11 @@ client.on('messageCreate', (message) => {
         }
     }
 
-    // ======================
-    // 🚨 AUTOMOD END
-    // ======================
+ // ======================
+// 🚨 AUTOMOD END
+// ======================
+
+
 // ----------------------
 // LEVEL SYSTEM
 // ----------------------
@@ -167,14 +169,52 @@ function getLevel(xp) {
     return Math.floor(xp / 100);
 }
 
-const last = cooldowns.get(message.author.id);
+
+// ----------------------
+// XP / COOLDOWN LOGIC (FIXED STRUCTURE)
+// ----------------------
+client.on('messageCreate', (message) => {
+    if (message.author.bot) return;
+
+    const user = getUser(message.author.id);
+
+    const last = cooldowns.get(message.author.id);
     if (last && Date.now() - last < 5000) return;
 
     cooldowns.set(message.author.id, Date.now());
 
     let xpGain = Math.floor(Math.random() * 10) + 5;
 
-    if (Date.now() < user.xpBoostUntil) xpGain *= 2;
+    if (Date.now() < user.xpBoostUntil) {
+        xpGain *= 2;
+    }
+
+    // QUEST SYSTEM (kept safe + structured)
+    if (!user.quest) resetQuest(user);
+    if (Date.now() > user.quest.resetTime) resetQuest(user);
+
+    if (!user.quest.completed && user.quest.type === "xp") {
+        user.quest.progress += xpGain;
+
+        if (user.quest.progress >= user.quest.goal) {
+            user.quest.completed = true;
+            user.coins += user.quest.reward;
+        }
+    }
+
+    // LEVEL SYSTEM
+    const oldLevel = getLevel(user.xp);
+    user.xp += xpGain;
+    const newLevel = getLevel(user.xp);
+
+    if (newLevel > oldLevel) {
+        user.level = newLevel;
+        user.coins += newLevel * 25;
+    }
+
+    saveData();
+});
+
 
 // =====================================================
 // 🆕 MODERATION ADDITIONS (APPENDED ONLY - NOTHING REMOVED)
@@ -200,7 +240,6 @@ function clearWarnings(user) {
     user.warnings = 0;
     user.warnHistory = [];
 }
-
 // ----------------------
 // SHOP ITEMS
 // ----------------------
