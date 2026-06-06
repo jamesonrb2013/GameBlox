@@ -1,14 +1,16 @@
 {
   "name": "gameblox",
   "version": "1.0.0",
+  "description": "GameBlox Discord Bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
+  "engines": {
+    "node": ">=20"
+  },
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "discord.js": "^14.26.4",
     "express": "^5.1.0"
