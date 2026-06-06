@@ -80,7 +80,7 @@ app.get("/", (req, res) => {
 });
 
 // Dashboard page
-app.get("/dashboard", (req, res) => {
+app.get("/dashboard", checkAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
