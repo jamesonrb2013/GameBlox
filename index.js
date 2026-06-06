@@ -524,16 +524,6 @@ client.on(Events.InteractionCreate, async interaction => {
     // (YOUR EXISTING COMMANDS WOULD CONTINUE BELOW — NOT REMOVED)
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-    res.send('GameBlox Online');
-});
-
-app.listen(PORT, () => {
-    console.log(`Web server running on port ${PORT}`);
-});
-
 loadData();
 
 client.login(TOKEN);
