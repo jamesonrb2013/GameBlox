@@ -598,4 +598,9 @@ client.on(Events.InteractionCreate, async interaction => {
 
 loadData();
 
+setInterval(() => {
+    fetch("https://gameblox.onrender.com/")
+        .catch(() => {});
+}, 4 * 60 * 1000);
+
 client.login(TOKEN);
