@@ -15,6 +15,8 @@ const fs = require('fs');
 const path = require('path');
 
 const express = require("express");
+const session = require("express-session");
+const passport = require("./auth");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
