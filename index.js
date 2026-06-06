@@ -14,8 +14,36 @@ const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 const fs = require('fs');
 const path = require('path');
 
-const express = require('express');
+const express = require("express");
 const app = express();
+
+const PORT = process.env.PORT || 10000;
+
+// Serve frontend files
+app.use(express.static("public"));
+
+// Home route
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
+// Dashboard route
+app.get("/dashboard", (req, res) => {
+  res.sendFile(__dirname + "/public/dashboard.html");
+});
+
+// Simple API for bot status
+app.get("/api/status", (req, res) => {
+  res.json({
+    status: "online",
+    bot: "GameBlox",
+    uptime: process.uptime()
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Web server running on port ${PORT}`);
+});
 
 // ----------------------
 // CLIENT SETUP
