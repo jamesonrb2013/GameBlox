@@ -55,6 +55,25 @@ app.get("/logout", (req, res) => {
     });
 });
 
+function checkAuth(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
+    res.redirect("/auth/discord");
+}
+
+function checkAdmin(req, res, next) {
+    if (
+        req.isAuthenticated() &&
+        req.user.id === "1441223435043868735"
+    ) {
+        return next();
+    }
+
+    res.status(403).send("Access denied");
+}
+
 // Home page
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
