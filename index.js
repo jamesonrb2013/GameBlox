@@ -14,6 +14,9 @@ const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 const fs = require('fs');
 const path = require('path');
 
+const express = require('express');
+const app = express();
+
 // ----------------------
 // CLIENT SETUP
 // ----------------------
@@ -491,6 +494,16 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 
     // (YOUR EXISTING COMMANDS WOULD CONTINUE BELOW — NOT REMOVED)
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('GameBlox Online');
+});
+
+app.listen(PORT, () => {
+    console.log(`Web server running on port ${PORT}`);
 });
 
 client.login(TOKEN);
