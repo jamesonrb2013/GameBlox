@@ -21,6 +21,17 @@ const passport = require("./auth");
 const app = express();
 const PORT = process.env.PORT || 10000;
 
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false
+    })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
