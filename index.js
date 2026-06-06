@@ -14,6 +14,29 @@ const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 const fs = require('fs');
 const path = require('path');
 
+const controlFile = path.join(__dirname, "control.json");
+
+let control = {
+    automod: true,
+    xp: true
+};
+
+function loadControl() {
+    try {
+        if (fs.existsSync(controlFile)) {
+            control = JSON.parse(fs.readFileSync(controlFile, "utf8"));
+        }
+    } catch (e) {
+        console.log("Control file error, resetting.");
+    }
+}
+
+function saveControl() {
+    fs.writeFileSync(controlFile, JSON.stringify(control, null, 2));
+}
+
+loadControl();
+
 const express = require("express");
 const session = require("express-session");
 const passport = require("./auth");
@@ -241,7 +264,9 @@ async function sendLog(guild, embed) {
 //automod
 // ----------------------
 client.on('messageCreate', (message) => {
+    if (!control.xp) return;
     if (message.author.bot) return;
+    if (!control.automod) return;
 
     const user = getUser(message.author.id);
     const content = message.content.toLowerCase();
