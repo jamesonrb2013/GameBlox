@@ -6,11 +6,21 @@
 </head>
 <body>
   <div class="container">
-    <h1>📊 Dashboard</h1>
 
+    <h1>📊 GameBlox Dashboard</h1>
+
+    <!-- USER PANEL -->
+    <div class="card" id="userCard">
+      <h2>👤 Logged In</h2>
+      <p id="userInfo">Loading user...</p>
+      <a class="btn" href="/logout">Logout</a>
+    </div>
+
+    <!-- STATS -->
     <div class="grid">
+
       <div class="card">
-        <h2>Bot Status</h2>
+        <h2>Status</h2>
         <p id="status">Loading...</p>
       </div>
 
@@ -28,13 +38,20 @@
         <h2>Users</h2>
         <p id="users">Loading...</p>
       </div>
+
     </div>
 
-    <div class="card">
-      <h2>Controls</h2>
-      <button class="btn">Restart Bot (coming soon)</button>
-      <button class="btn">Refresh Stats</button>
+    <!-- ADMIN PANEL -->
+    <div class="card" id="adminPanel" style="display:none;">
+      <h2>🔧 Admin Controls</h2>
+
+      <button class="btn">Restart Bot</button>
+      <button class="btn">Reload Commands</button>
+      <button class="btn">Clear Cache</button>
+
+      <p style="opacity:0.6;">Owner-only section</p>
     </div>
+
   </div>
 
   <script src="/dashboard.js"></script>
