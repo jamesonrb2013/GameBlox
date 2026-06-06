@@ -87,11 +87,11 @@ app.get("/dashboard", checkAuth, (req, res) => {
 // Bot status API
 app.get("/api/status", (req, res) => {
   res.json({
-    status: "online",
-    bot: "GameBlox",
+    status: client.user ? "online" : "loading",
+    bot: client.user?.tag || "GameBlox",
     uptime: process.uptime(),
-    servers: 1,
-    users: 0
+    servers: client.guilds.cache.size,
+    users: client.users.cache.reduce((a, g) => a + g.memberCount, 0)
   });
 });
 
