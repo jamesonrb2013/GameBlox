@@ -95,6 +95,20 @@ app.get("/api/status", (req, res) => {
   });
 });
 
+app.get("/api/user", (req, res) => {
+  if (!req.user) {
+    return res.json(null);
+  }
+
+  res.json({
+    id: req.user.id,
+    username: req.user.username,
+    avatar: req.user.avatar
+      ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.png`
+      : null
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Web server running on port ${PORT}`);
 });
