@@ -15,29 +15,32 @@ const fs = require('fs');
 const path = require('path');
 
 const express = require("express");
-const app = express();
+const path = require("path");
 
+const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Serve frontend files
-app.use(express.static("public"));
+// Serve static files
+app.use(express.static(path.join(__dirname, "public")));
 
-// Home route
+// Home page
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Dashboard route
+// Dashboard page
 app.get("/dashboard", (req, res) => {
-  res.sendFile(__dirname + "/public/dashboard.html");
+  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
-// Simple API for bot status
+// Bot status API
 app.get("/api/status", (req, res) => {
   res.json({
     status: "online",
     bot: "GameBlox",
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    servers: 1,
+    users: 0
   });
 });
 
