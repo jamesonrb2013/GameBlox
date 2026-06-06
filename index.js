@@ -506,4 +506,6 @@ app.listen(PORT, () => {
     console.log(`Web server running on port ${PORT}`);
 });
 
+loadData();
+
 client.login(TOKEN);
