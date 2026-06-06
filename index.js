@@ -131,6 +131,10 @@ const dataFile = path.join(__dirname, 'xp.json');
 const cooldowns = new Map();
 
 let users = new Map();
+const settings = {
+    automod: true,
+    xp: true
+};
 
 function loadData() {
     try {
