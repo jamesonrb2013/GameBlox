@@ -7,6 +7,13 @@ const {
     SlashCommandBuilder
 } = require('discord.js');
 
+const {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    EmbedBuilder
+} = require("discord.js");
+
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
@@ -471,7 +478,10 @@ const shopItems = [
 // ----------------------
 const commands = [
     new SlashCommandBuilder().setName('ping').setDescription('Pong').toJSON(),
-    new SlashCommandBuilder().setName('help').setDescription('Help').toJSON(),
+    new SlashCommandBuilder()
+    .setName("help")
+    .setDescription("Open the GameBlox help menu")
+    .toJSON(),
     new SlashCommandBuilder().setName('profile').setDescription('Profile').toJSON(),
     new SlashCommandBuilder().setName('level').setDescription('Level').toJSON(),
     new SlashCommandBuilder().setName('leaderboard').setDescription('Leaderboard').toJSON(),
@@ -606,6 +616,133 @@ client.on(Events.InteractionCreate, async interaction => {
     if (interaction.commandName === 'ping') {
         return interaction.reply('🏓 Pong!');
     }
+
+    if (interaction.commandName === "help") {
+
+    const mainEmbed = new EmbedBuilder()
+        .setTitle("🎮 GameBlox Help Center")
+        .setDescription("Select a category below to explore commands.")
+        .setColor(0x6C5CE7)
+        .addFields(
+            { name: "📊 Economy", value: "Coins, XP, rewards", inline: true },
+            { name: "🛡 Moderation", value: "Admin tools", inline: true },
+            { name: "🎮 Fun", value: "Games & entertainment", inline: true },
+            { name: "⚙️ Utility", value: "Info & stats", inline: true },
+            { name: "🔧 Admin", value: "Bot controls", inline: true }
+        )
+        .setFooter({ text: "GameBlox Help System" });
+
+    const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId("help_economy")
+            .setLabel("Economy")
+            .setStyle(ButtonStyle.Primary),
+
+        new ButtonBuilder()
+            .setCustomId("help_mod")
+            .setLabel("Moderation")
+            .setStyle(ButtonStyle.Danger),
+
+        new ButtonBuilder()
+            .setCustomId("help_fun")
+            .setLabel("Fun")
+            .setStyle(ButtonStyle.Success),
+
+        new ButtonBuilder()
+            .setCustomId("help_util")
+            .setLabel("Utility")
+            .setStyle(ButtonStyle.Secondary),
+
+        new ButtonBuilder()
+            .setCustomId("help_admin")
+            .setLabel("Admin")
+            .setStyle(ButtonStyle.Secondary)
+    );
+
+    return interaction.reply({
+        embeds: [mainEmbed],
+        components: [row],
+        ephemeral: true
+    });
+}
+
+client.on("interactionCreate", async (interaction) => {
+    if (!interaction.isButton()) return;
+
+    let embed;
+
+    switch (interaction.customId) {
+
+        case "help_economy":
+            embed = new EmbedBuilder()
+                .setTitle("📊 Economy Commands")
+                .setColor(0x00D2FF)
+                .setDescription(`
+/balance - Check coins  
+/daily - Claim rewards  
+/shop - View shop  
+/inventory - Your items  
+/leaderboard - Top users
+                `);
+            break;
+
+        case "help_mod":
+            embed = new EmbedBuilder()
+                .setTitle("🛡 Moderation Commands")
+                .setColor(0xFF3B3B)
+                .setDescription(`
+/kick - Kick user  
+/ban - Ban user  
+/timeout - Mute user  
+/warn - Warn user  
+/warnings - View warnings
+                `);
+            break;
+
+        case "help_fun":
+            embed = new EmbedBuilder()
+                .setTitle("🎮 Fun Commands")
+                .setColor(0x2ECC71)
+                .setDescription(`
+/coinflip  
+/dice  
+/8ball  
+/meme
+                `);
+            break;
+
+        case "help_util":
+            embed = new EmbedBuilder()
+                .setTitle("⚙️ Utility Commands")
+                .setColor(0x95A5A6)
+                .setDescription(`
+/ping  
+/userinfo  
+/serverinfo  
+/uptime  
+/botinfo
+                `);
+            break;
+
+        case "help_admin":
+            embed = new EmbedBuilder()
+                .setTitle("🔧 Admin Commands")
+                .setColor(0xF1C40F)
+                .setDescription(`
+/toggle automod  
+/toggle xp  
+/restart
+                `);
+            break;
+    }
+
+    if (embed) {
+        await interaction.update({
+            embeds: [embed],
+            components: []
+        });
+    }
+});
 
     // ----------------------
     // 🆕 WARN
