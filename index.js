@@ -18,8 +18,12 @@ const controlFile = path.join(__dirname, "control.json");
 
 let control = {
     automod: true,
-    xp: true
+    xp: true,
+    restarting: false,
+    status: "online"
 };
+
+let adminLogs = [];
 
 function loadControl() {
     try {
@@ -120,6 +124,36 @@ app.get("/api/status", (req, res) => {
     servers: 1,
     users: 0
   });
+});
+
+app.get("/api/control", (req, res) => {
+    res.json({
+        xp: control.xp,
+        automod: control.automod
+    });
+});
+
+app.post("/api/restart", (req, res) => {
+    const adminIds = [
+        "1441223435043868735",
+        "1506069255484084354"
+    ];
+
+    if (!req.user || !adminIds.includes(req.user.id)) {
+        return res.status(403).json({ error: "No access" });
+    }
+
+    control.restarting = true;
+    control.status = "restarting";
+
+res.json({
+    success: true,
+    message: "Bot restarting..."
+});
+
+setTimeout(() => {
+    process.exit(1);
+}, 1500);
 });
 
 const adminIds = [

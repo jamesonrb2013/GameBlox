@@ -44,10 +44,12 @@ function checkAdmin(userId) {
 }
 
 async function init() {
-  await loadStats();
-  await loadUser();
+    await loadStats();
+    await loadUser();
+    await loadControl();
 
-  setInterval(loadStats, 5000);
+    setInterval(loadStats, 5000);
+    setInterval(loadControl, 3000);
 }
 
 document.getElementById("toggleXP").addEventListener("click", async () => {
@@ -58,6 +60,26 @@ document.getElementById("toggleXP").addEventListener("click", async () => {
 document.getElementById("toggleAutomod").addEventListener("click", async () => {
     await fetch("/api/toggle/automod", { method: "POST" });
     alert("Automod toggled");
+});
+
+async function loadControl() {
+    const res = await fetch("/api/control");
+    const data = await res.json();
+
+    document.getElementById("xpStatus").innerText =
+        data.xp ? "🟢 ON" : "🔴 OFF";
+
+    document.getElementById("automodStatus").innerText =
+        data.automod ? "🟢 ON" : "🔴 OFF";
+}
+
+document.getElementById("restartBot").addEventListener("click", async () => {
+    const confirmRestart = confirm("Are you sure you want to restart the bot?");
+    if (!confirmRestart) return;
+
+    await fetch("/api/restart", { method: "POST" });
+
+    alert("Bot restarting...");
 });
 
 init();
