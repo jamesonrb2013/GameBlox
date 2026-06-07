@@ -371,9 +371,12 @@ for (const word of badWords) {
 
     // SPAM DETECTION (simple)
     user.lastMessages = user.lastMessages || [];
-    user.lastMessages.push(Date.now());
 
-    if (user.lastMessages.length > 5) user.lastMessages.shift();
+user.lastMessages.push(Date.now());
+
+if (user.lastMessages.length > 5) {
+    user.lastMessages.shift();
+}
 
     if (user.lastMessages.length === 5) {
         const diff = user.lastMessages[4] - user.lastMessages[0];
