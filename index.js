@@ -101,17 +101,6 @@ function checkAuth(req, res, next) {
     res.redirect("/auth/discord");
 }
 
-function checkAdmin(req, res, next) {
-    if (
-        req.isAuthenticated() &&
-        req.user.id === "1441223435043868735"
-    ) {
-        return next();
-    }
-
-    res.status(403).send("Access denied");
-}
-
 // Home page
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
@@ -133,43 +122,63 @@ app.get("/api/status", (req, res) => {
   });
 });
 
-app.post("/api/admin/toggle-automod", (req, res) => {
-    if (!req.user || req.user.id !== "1441223435043868735") {
+const adminIds = [
+    "1441223435043868735",
+    "1506069255484084354"
+];
+
+function isAdmin(req) {
+    return req.user && adminIds.includes(req.user.id);
+}
+
+app.post("/api/toggle/automod", (req, res) => {
+    if (!isAdmin(req)) {
         return res.status(403).json({ error: "No access" });
     }
 
-    settings.automod = !settings.automod;
+    control.automod = !control.automod;
+    saveControl();
 
     res.json({
         success: true,
-        automod: settings.automod
+        automod: control.automod
     });
 });
 
-app.post("/api/admin/toggle-xp", (req, res) => {
-    if (!req.user || req.user.id !== "1441223435043868735") {
+app.post("/api/toggle/xp", (req, res) => {
+    if (!isAdmin(req)) {
         return res.status(403).json({ error: "No access" });
     }
 
-    settings.xp = !settings.xp;
+    control.xp = !control.xp;
+    saveControl();
 
     res.json({
         success: true,
-        xp: settings.xp
+        xp: control.xp
     });
 });
 
 app.get("/api/user", (req, res) => {
   if (!req.user) {
-    return res.json(null);
+    return res.json({
+      loggedIn: false
+    });
   }
 
+  const adminIds = [
+    "1441223435043868735",
+    "1506069255484084354"
+  ];
+
   res.json({
+    loggedIn: true,
     id: req.user.id,
     username: req.user.username,
     avatar: req.user.avatar
       ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.png`
-      : null
+      : null,
+    isAdmin: adminIds.includes(req.user.id)
   });
 });
 
@@ -195,10 +204,6 @@ const dataFile = path.join(__dirname, 'xp.json');
 const cooldowns = new Map();
 
 let users = new Map();
-const settings = {
-    automod: true,
-    xp: true
-};
 
 function loadData() {
     try {
@@ -276,10 +281,9 @@ async function sendLog(guild, embed) {
 }
 
 // ----------------------
-//automod
+// AUTOMOD
 // ----------------------
 client.on('messageCreate', (message) => {
-    if (!control.xp) return;
     if (message.author.bot) return;
     if (!control.automod) return;
 
@@ -344,6 +348,7 @@ function getLevel(xp) {
 // ----------------------
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
+    if (!control.xp) return;
 
     const user = getUser(message.author.id);
 

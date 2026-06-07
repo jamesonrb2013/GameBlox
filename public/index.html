@@ -10,7 +10,7 @@
     <p>Your Discord bot dashboard system</p>
 
 <div id="accountArea">
-  <a href="/auth/discord/callback" class="btn discord-btn">Login with Discord</a>
+<a href="/auth/discord" class="btn discord-btn">Login with Discord</a>
 </div>
 
 <a href="/dashboard" class="btn">Open Dashboard</a>
@@ -21,17 +21,18 @@ async function loadUser() {
     const res = await fetch("/api/user");
     const user = await res.json();
 
-    if (!user.loggedIn) return;
+if (!user || !user.loggedIn) return;
 
-    document.getElementById("accountArea").innerHTML = `
-        <div class="user-box">
-            <img
-                src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png"
-                class="avatar"
-            >
-            <span>${user.username}</span>
-        </div>
-    `;
+ document.getElementById("accountArea").innerHTML = `
+    <div class="user-box">
+        <img
+            src="${user.avatar}"
+            class="avatar"
+        >
+        <span>${user.username}</span>
+        ${user.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}
+    </div>
+`;
 }
 
 loadUser();
