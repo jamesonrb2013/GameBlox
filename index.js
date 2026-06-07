@@ -353,16 +353,13 @@ client.on('messageCreate', (message) => {
     const user = getUser(message.author.id);
     const content = message.content.toLowerCase();
 
-    // ======================
-    // 🚨 AUTOMOD START
-    // ======================
-
-    // BAD WORD FILTER (basic example)
-    for (const word of badWords) {
-    if (content.includes(word)) {
+   // 🚨 BAD WORD FILTER
+for (const word of badWords) {
+    if (new RegExp(`\\b${word}\\b`, "i").test(content)) {
         message.delete().catch(() => {});
 
-        user.warnings = (user.warnings || 0) + 1;
+        addWarning(user, `Bad word: ${word}`);
+        saveData();
 
         message.channel.send(
             `⚠️ <@${message.author.id}> warned for language.`
@@ -371,19 +368,6 @@ client.on('messageCreate', (message) => {
         return;
     }
 }
-
-    for (const word of badWords) {
-        if (content.includes(word)) {
-            message.delete().catch(() => {});
-
-            addWarning(user, `Bad word: ${word}`);
-            saveData();
-
-            message.channel.send(`⚠️ <@${message.author.id}> warned for language.`);
-
-            return; // stop XP gain
-        }
-    }
 
     // SPAM DETECTION (simple)
     user.lastMessages = user.lastMessages || [];
