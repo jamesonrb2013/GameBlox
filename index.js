@@ -55,6 +55,21 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/api/user", (req, res) => {
+    if (!req.user) {
+        return res.json({
+            loggedIn: false
+        });
+    }
+
+    res.json({
+        loggedIn: true,
+        id: req.user.id,
+        username: req.user.username,
+        avatar: req.user.avatar
+    });
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 app.get(

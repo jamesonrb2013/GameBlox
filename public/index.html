@@ -9,7 +9,33 @@
     <h1>🎮 GameBlox</h1>
     <p>Your Discord bot dashboard system</p>
 
-    <a href="/dashboard" class="btn">Open Dashboard</a>
+<div id="accountArea">
+  <a href="/login" class="btn discord-btn">Login with Discord</a>
+</div>
+
+<a href="/dashboard" class="btn">Open Dashboard</a>
   </div>
+
+  <script>
+async function loadUser() {
+    const res = await fetch("/api/user");
+    const user = await res.json();
+
+    if (!user.loggedIn) return;
+
+    document.getElementById("accountArea").innerHTML = `
+        <div class="user-box">
+            <img
+                src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png"
+                class="avatar"
+            >
+            <span>${user.username}</span>
+        </div>
+    `;
+}
+
+loadUser();
+</script>
+
 </body>
 </html>
