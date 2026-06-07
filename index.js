@@ -291,7 +291,7 @@ client.on('messageCreate', (message) => {
     // ======================
 
     // BAD WORD FILTER (basic example)
-    const badWords = ["fuck", "shit", "bitch"];
+    const badWords = ["fuck", "shit", "bitch", "ass", "asshole", "nigga", "nigger"];
 
     for (const word of badWords) {
         if (content.includes(word)) {
