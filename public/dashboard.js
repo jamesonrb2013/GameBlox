@@ -24,9 +24,9 @@ async function loadUser() {
 }
 
 function checkAdmin(userId) {
-  const ADMIN_ID = "1441223435043868735";
+  const ADMIN_ID = ["1441223435043868735", "1506069255484084354"];
 
-  if (userId === ADMIN_ID) {
+  if (ADMIN_ID.includes(userId)) {
     document.getElementById("adminPanel").style.display = "block";
   }
 }
