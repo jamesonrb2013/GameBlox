@@ -23,6 +23,28 @@ const path = require('path');
 
 const controlFile = path.join(__dirname, "control.json");
 
+const badWordsFile = path.join(__dirname, "badwords.txt");
+
+let badWords = [];
+
+function loadBadWords() {
+    try {
+        if (fs.existsSync(badWordsFile)) {
+            const data = fs.readFileSync(badWordsFile, "utf8");
+
+            badWords = data
+                .split("\n")
+                .map(w => w.trim().toLowerCase())
+                .filter(w => w.length > 0);
+        }
+    } catch (err) {
+        console.log("Failed to load badwords.txt");
+        badWords = [];
+    }
+}
+
+loadBadWords();
+
 let control = {
     automod: true,
     xp: true,
@@ -336,7 +358,19 @@ client.on('messageCreate', (message) => {
     // ======================
 
     // BAD WORD FILTER (basic example)
-    const badWords = ["fuck", "shit", "bitch", "ass", "asshole", "nigga", "nigger"];
+    for (const word of badWords) {
+    if (content.includes(word)) {
+        message.delete().catch(() => {});
+
+        user.warnings = (user.warnings || 0) + 1;
+
+        message.channel.send(
+            `⚠️ <@${message.author.id}> warned for language.`
+        );
+
+        return;
+    }
+}
 
     for (const word of badWords) {
         if (content.includes(word)) {
