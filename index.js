@@ -362,7 +362,7 @@ for (const word of badWords) {
         saveData();
 
         message.channel.send(
-            `⚠️ <@&1508553441692221632> <@&1510277645093437540><@${message.author.id}> warned for language.`
+            `⚠️ <@&1510277645093437540> <@${message.author.id}> warned for language.`
         );
 
         return;
