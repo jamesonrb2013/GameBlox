@@ -509,6 +509,36 @@ const commands = [
     new SlashCommandBuilder().setName('daily').setDescription('Daily coins').toJSON(),
 
     new SlashCommandBuilder()
+    .setName('announce')
+    .setDescription('Send an announcement')
+    .addChannelOption(o =>
+        o.setName('channel')
+            .setDescription('Channel to send announcement')
+            .setRequired(true)
+    )
+    .addRoleOption(o =>
+        o.setName('role')
+            .setDescription('Role to ping')
+            .setRequired(true)
+    )
+    .addStringOption(o =>
+        o.setName('color')
+            .setDescription('Embed color (hex)')
+            .setRequired(true)
+    )
+    .addStringOption(o =>
+        o.setName('title')
+            .setDescription('Announcement title')
+            .setRequired(true)
+    )
+    .addStringOption(o =>
+        o.setName('message')
+            .setDescription('Announcement text')
+            .setRequired(true)
+    )
+    .toJSON(),
+
+    new SlashCommandBuilder()
         .setName('shop')
         .setDescription('Shop')
         .addStringOption(o =>
@@ -686,7 +716,40 @@ client.on(Events.InteractionCreate, async interaction => {
         ephemeral: true
     });
 }
+if (interaction.commandName === "announce") {
 
+    if (!interaction.member.permissions.has("ManageGuild")) {
+        return interaction.reply({
+            content: "❌ You do not have permission.",
+            ephemeral: true
+        });
+    }
+
+    const channel = interaction.options.getChannel("channel");
+    const role = interaction.options.getRole("role");
+    const color = interaction.options.getString("color");
+    const title = interaction.options.getString("title");
+    const message = interaction.options.getString("message");
+
+    await channel.send({
+        content: `${role}`,
+        embeds: [{
+            title: title,
+            description: message,
+            color: parseInt(color.replace("#", ""), 16),
+            footer: {
+                text: `Announcement by ${interaction.user.username}`
+            },
+            timestamp: new Date()
+        }]
+    });
+
+    await interaction.reply({
+        content: "✅ Announcement sent.",
+        ephemeral: true
+    });
+}
+    
 client.on("interactionCreate", async (interaction) => {
     if (!interaction.isButton()) return;
 
