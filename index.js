@@ -315,7 +315,13 @@ function getUser(id) {
     lastMessages: []
 });
     }
-    return users.get(id);
+    const user = users.get(id);
+
+if (!user.lastMessages) user.lastMessages = [];
+if (!user.warnings) user.warnings = [];
+if (!user.inventory) user.inventory = [];
+
+return user;
 }
 
 function resetQuest(user) {
@@ -330,7 +336,7 @@ function resetQuest(user) {
 }
 
 // ----------------------
-// LOGGING SYSTEM (NEW)
+// LOGGING SYSTEM
 // ----------------------
 async function sendLog(guild, embed) {
     try {
